@@ -1,0 +1,22 @@
+name: Push Asset Enum Change to PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  push-file-change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Update enum
+        run: echo "This is a modified line" >> lib/src/icons/next_flutter_icons.dart
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Add file change via action"
+          git push

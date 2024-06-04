@@ -77,6 +77,9 @@ class NextIcon extends StatelessWidget {
     // TODO(AbhiShake1): get default variant from theme
     final NextIconVariant(:trailingPath) = variant ?? NextIconVariant.outline;
     // TODO(AbhiShake1): get builder from theme and use fallback builder here
-    return Image.asset('assets/${icon.basePath}/$trailingPath');
+    return Image.asset(
+      'assets/${icon.basePath}/$trailingPath',
+      package: 'next_flutter_icons',
+    );
   }
 }
