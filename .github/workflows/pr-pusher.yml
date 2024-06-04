@@ -16,7 +16,7 @@ jobs:
       
       - name: Commit and push changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "abhi9848038283@gmail.com"
+          git config --local user.name "AbhiShake1"
           git commit -am "Add file change via action"
           git push origin HEAD:${{ github.head_ref }}
