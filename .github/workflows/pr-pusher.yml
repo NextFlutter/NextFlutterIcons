@@ -38,6 +38,9 @@ jobs:
             SVGS=$(find $ASSETS_DIR/$FOLDER_NAME/ -type f -name "*.svg")
             SVGS_LEN=${#SVGS[@]}
 
+            echo $SVGS_LEN
+            echo $SVGS
+
             if [ "$SVGS_LEN" != "$EXPECTED_FILES" ]; then
               echo "Expected $EXPECTED_FILES files, but found $SVGS_LEN."
               exit 1
