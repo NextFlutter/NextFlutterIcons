@@ -35,12 +35,9 @@ jobs:
 
             echo $(ls "$ASSETS_DIR/$FOLDER_NAME")
 
-            SVGS_LEN=$(find assets -maxdepth 1 -type f -name "*.svg" | wc -l)
+            SVGS_LEN=$(find assets -type f -name "*.svg" | wc -l)
 
             readarray -d '.svg' -t SVGS < <(find assets -name "*.svg" -print0)
-
-            echo $SVGS_LEN
-            echo $SVGS
 
             if [ "$SVGS_LEN" != "$EXPECTED_FILES" ]; then
               echo "Expected $EXPECTED_FILES files, but found $SVGS_LEN."
