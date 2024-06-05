@@ -29,19 +29,19 @@ jobs:
           for DIR in $ASSETS; do
             DIR_NAME=$(basename $DIR)
             if [[ $DIR_NAME == *"_"* ]]; then
-              continue # Skip directories with underscores (assuming they're not valid enum cases)
+              continue # Skip directories with underscores (assuming they're not valid enum cases and just used for metadata)
             fi
             ENUM_CASE="$DIR_NAME('$DIR_NAME')"
-            ENUM_DEFINITION+="  $ENUM_CASE,\n"
+            ENUM_DEFINITION+="  $ENUM_CASE,"
           done
           
           # Close the enum definition
-          ENUM_DEFINITION+=";\nconst NextIcons(super.basePath);}"
+          ENUM_DEFINITION+=";const NextIcons(super.basePath);}"
           
           # Output the generated enum definition
-          echo "$ENUM_DEFINITION" > $(GEN_FILE)
+          echo "$ENUM_DEFINITION" > "$GEN_FILE"
 
-          dart format $(GEN_FILE)
+          dart format $GEN_FILE
           
 
       # Commit all changed files back to the repository
