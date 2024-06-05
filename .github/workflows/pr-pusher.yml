@@ -21,6 +21,23 @@ jobs:
       - name: Update enum
         run: |
           GEN_FILE="lib/src/icons/next_flutter_icons.dart"
+          ASSETS_DIR="${{ github.workspace }}/assets/"
+
+          ZIP_FILES=$(find $ASSETS_DIR -type f -name "*.zip")
+
+          # if [ -z "$ZIP_FILES" ]; then
+          #   echo "No .zip file found in assets. Nothing needs to be processed"
+          #   exit 0
+          # fi
+          
+          for ZIP_FILE in $ZIP_FILES; do
+            FOLDER_NAME=$(basename -s.zip "$ZIP_FILE")
+            mkdir -p $ASSETS_DIR/a/
+            unzip "$ZIP_FILE" -d $ASSETS_DIR/$FOLDER_NAME
+            
+            rm "$ZIP_FILE"
+          done
+          
           ASSETS=$(ls ${{ github.workspace }}/assets/)
 
           ENUM_DEFINITION="
