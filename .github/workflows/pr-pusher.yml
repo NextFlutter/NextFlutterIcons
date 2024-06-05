@@ -18,11 +18,10 @@ jobs:
       - name: Update enum
         run: echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
       
-      - name: Commit changes
+      - name: Setup commit author
         run: |
           git config --local user.email "abhi@git.com"
           git config --local user.name "AbhiShake1"
-          git commit -am "Add file change via action"
 
       # Commit all changed files back to the repository
       - uses: stefanzweifel/git-auto-commit-action@v5
