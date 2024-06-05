@@ -1,27 +1,5 @@
-name: Push Asset Change to PRs
-
-on:
-  pull_request:
-    types: [opened, synchronize]
-
-jobs:
-  push-file-change:
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-      
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup dart
-        uses: dart-lang/setup-dart@v1
-      
-      - name: Update enum
-        run: |
             GEN_FILE="lib/src/icons/next_flutter_icons.dart"
-            ASSETS_DIR="${{ github.workspace }}/assets"
+            ASSETS_DIR="assets"
             
             EXPECTED_NAMES=("bold.svg" "broken.svg" "bulk.svg" "linear.svg" "outline.svg" "twotone.svg")
             EXPECTED_FILES=${#EXPECTED_NAMES[@]}
@@ -61,7 +39,7 @@ jobs:
                        
              rm "$ZIP_FILE"
             
-             ASSETS=$(ls ${{ github.workspace }}/assets)
+             ASSETS=$(ls assets/)
             
              ENUM_DEFINITION="
                  import 'package:flutter/widgets.dart'; 
@@ -91,8 +69,3 @@ jobs:
             
              dart format $GEN_FILE
             done
-
-    - name: Push changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: Generate icons

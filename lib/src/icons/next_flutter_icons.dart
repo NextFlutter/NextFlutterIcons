@@ -6,6 +6,7 @@ import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';
 /// {@endtemplate}
 @staticIconProvider
 enum NextIcons implements WithBasePath {
+  batteryEmpty('batteryEmpty'),
   trash('trash'),
   ;
 
