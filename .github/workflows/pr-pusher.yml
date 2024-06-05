@@ -20,83 +20,75 @@ jobs:
       
       - name: Update enum
         run: |
-          GEN_FILE="lib/src/icons/next_flutter_icons.dart"
-          ASSETS_DIR="${{ github.workspace }}/assets/"
+            GEN_FILE="lib/src/icons/next_flutter_icons.dart"
+            ASSETS_DIR="${{ github.workspace }}/assets/"
+            
+            EXPECTED_NAMES=("bold.svg" "broken.svg" "bulk.svg" "linear.svg" "outline.svg" "twotone.svg")
+            EXPECTED_FILES=${#EXPECTED_NAMES[@]}
 
-          EXPECTED_NAMES=("bold.svg" "broken.svg" "bulk.svg" "linear.svg" "outline.svg" "twotone.svg")
-          EXPECTED_FILES=${#EXPECTED_NAMES[@]}
-
-          ZIP_FILES=$(find $ASSETS_DIR -type f -name "*.zip")
-          
-          for ZIP_FILE in $ZIP_FILES; do
-            FOLDER_NAME=$(basename -s.zip "$ZIP_FILE")
-            mkdir -p $ASSETS_DIR/$FOLDER_NAME/
-            unzip "$ZIP_FILE" -d $ASSETS_DIR/$FOLDER_NAME
-
-            echo $(ls "$ASSETS_DIR/$FOLDER_NAME")
-
-            SVGS_LEN=$(find assets -type f -name "*.svg" | wc -l)
-
-            readarray -d '.svg' -t SVGS < <(find assets -name "*.svg" -print0)
-
-            if [ "$SVGS_LEN" != "$EXPECTED_FILES" ]; then
-              echo "Expected $EXPECTED_FILES files, but found $SVGS_LEN."
-              exit 1
-            fi
-
-            for FILE in "${EXPECTED_NAMES[@]}"; do
-              BASENAME=$(basename "$FILE".svg)
-              FOUND=0
-              for SVG in $SVGS; do
-                if [[ $SVG == *"$BASENAME"* ]]; then
-                  mv "$ASSETS_DIR/$FOLDER_NAME/$SVG" "$ASSETS_DIR/$FOLDER_NAME/$BASENAME"
-                  FOUND=$(FOUND+1)
-                  break
-                fi
-              done
+            ZIP_FILES=$(find $ASSETS_DIR -type f -name "*.zip")
+            
+            for ZIP_FILE in $ZIP_FILES; do
+             FOLDER_NAME=$(basename -s.zip "$ZIP_FILE")
+             mkdir -p $ASSETS_DIR/$FOLDER_NAME/
+             unzip "$ZIP_FILE" -d $ASSETS_DIR/$FOLDER_NAME
+            
+             SVGS_LEN=$(ls -1 $DIR | wc -l)
+            
+             if [ "$SVGS_LEN" != "$EXPECTED_FILES" ]; then
+               echo "Expected $EXPECTED_FILES files, but found $SVGS_LEN."
+               exit 1
+             fi
+            
+             for FILE in "${EXPECTED_NAMES[@]}"; do
+               BASENAME=$(basename "$FILE".svg)
+               FOUND=0
+            
+               readarray -d '.svg' -t SVGS < <(find assets/$DIR -name "*.svg" -print0)
+            
+               for SVG in $SVGS; do
+                 if [[ $SVG == *"$BASENAME"* ]]; then
+                   mv "$ASSETS_DIR/$FOLDER_NAME/$SVG" "$ASSETS_DIR/$FOLDER_NAME/$BASENAME"
+                   FOUND=$(FOUND+1)
+                   break
+                 fi
+               done
+             done
+             
+             if [[ $FOUND -eq 0 ]]; then
+               echo "File $FILE not found or did not match expected pattern."
+               exit 1
+             fi
+                       
+             rm "$ZIP_FILE"
+            
+             ASSETS=$(ls ${{ github.workspace }}/assets/)
+            
+             ENUM_DEFINITION="
+                 import 'package:flutter/widgets.dart'; 
+                 import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';  
+                     
+                 /// {@template next_flutter_icons}
+                 /// pretty cool icons
+                 /// {@endtemplate}
+                 @staticIconProvider
+                 enum NextIcons implements WithBasePath {
+             "
+                     
+             # Add each directory as an enum case
+             for DIR in $ASSETS; do
+               DIR_NAME=$(basename $DIR)
+               if [[ $DIR_NAME == *"_"* ]]; then
+                 continue # Skip directories with underscores (assuming they're not valid enum cases and just used for metadata)
+               fi
+               ENUM_CASE="$DIR_NAME('$DIR_NAME')"
+               ENUM_DEFINITION+="  $ENUM_CASE,"
+             done
+                     
+             ENUM_DEFINITION+=";const NextIcons(super.basePath);}"
+                     
+             # Output the generated enum definition
+             echo "$ENUM_DEFINITION" > "$GEN_FILE"
+            
+             dart format $GEN_FILE
             done
-            
-            if [[ $FOUND -eq 0 ]]; then
-              echo "File $FILE not found or did not match expected pattern."
-              exit 1
-            fi
-            
-            rm "$ZIP_FILE"
-          done
-          
-          ASSETS=$(ls ${{ github.workspace }}/assets/)
-
-          ENUM_DEFINITION="
-          import 'package:flutter/widgets.dart'; 
-          import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';  
-          
-          /// {@template next_flutter_icons}
-          /// pretty cool icons
-          /// {@endtemplate}
-          @staticIconProvider
-          enum NextIcons implements WithBasePath {
-          "
-          
-          # Add each directory as an enum case
-          for DIR in $ASSETS; do
-            DIR_NAME=$(basename $DIR)
-            if [[ $DIR_NAME == *"_"* ]]; then
-              continue # Skip directories with underscores (assuming they're not valid enum cases and just used for metadata)
-            fi
-            ENUM_CASE="$DIR_NAME('$DIR_NAME')"
-            ENUM_DEFINITION+="  $ENUM_CASE,"
-          done
-          
-          ENUM_DEFINITION+=";const NextIcons(super.basePath);}"
-          
-          # Output the generated enum definition
-          echo "$ENUM_DEFINITION" > "$GEN_FILE"
-
-          dart format $GEN_FILE
-          
-
-      # Commit all changed files back to the repository
-      - name: Push changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Generate icons
