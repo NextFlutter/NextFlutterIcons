@@ -34,9 +34,10 @@ jobs:
             unzip "$ZIP_FILE" -d $ASSETS_DIR/$FOLDER_NAME
 
             SVGS=$(ls $ASSETS_DIR/$FOLDER_NAME/)
+            SVGS_LEN=${#SVGS[@]}
 
-            if [ "$SVGS" != "5" ]; then
-              echo "Expected $EXPECTED_FILES files, but found $SVGS."
+            if [ "$SVGS_LEN" != "$EXPECTED_FILES" ]; then
+              echo "Expected $EXPECTED_FILES files, but found $SVGS_LEN."
               exit 1
             fi
 
@@ -46,7 +47,7 @@ jobs:
               for SVG in $SVGS; do
                 if [[ $SVG == *"$BASENAME"* ]]; then
                   mv "$ASSETS_DIR/$FOLDER_NAME/$SVG" "$ASSETS_DIR/$FOLDER_NAME/$BASENAME"
-                  FOUND=1
+                  FOUND=$(FOUND+1)
                   break
                 fi
               done
