@@ -14,9 +14,44 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup dart
+        uses: dart-lang/setup-dart@v1
       
       - name: Update enum
-        run: echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
+        run: |
+          GEN_FILE="lib/src/icons/next_flutter_icons.dart"
+          ASSETS=$(ls ${{ github.workspace }}/assets/)
+
+          ENUM_DEFINITION="
+          import 'package:flutter/widgets.dart'; 
+          import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';  
+          
+          /// {@template next_flutter_icons}
+          /// pretty cool icons
+          /// {@endtemplate}
+          @staticIconProvider
+          enum NextIcons implements WithBasePath {
+          "
+          
+          # Add each directory as an enum case
+          for DIR in $ASSETS; do
+            DIR_NAME=$(basename $DIR)
+            if [[ $DIR_NAME == *"_"* ]]; then
+              continue # Skip directories with underscores (assuming they're not valid enum cases and just used for metadata)
+            fi
+            ENUM_CASE="$DIR_NAME('$DIR_NAME')"
+            ENUM_DEFINITION+="  $ENUM_CASE,"
+          done
+          
+          # Close the enum definition
+          ENUM_DEFINITION+=";const NextIcons(super.basePath);}"
+          
+          # Output the generated enum definition
+          echo "$ENUM_DEFINITION" > "$GEN_FILE"
+
+          dart format $GEN_FILE
+          
 
       # Commit all changed files back to the repository
       - name: Push changes

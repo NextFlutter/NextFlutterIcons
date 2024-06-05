@@ -6,11 +6,8 @@ import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';
 /// {@endtemplate}
 @staticIconProvider
 enum NextIcons implements WithBasePath {
-  /// {@macro next_icons_trash}
   trash('trash'),
   ;
 
   const NextIcons(super.basePath);
 }
-/*This is a modified line*/
-/*This is a modified line*/
