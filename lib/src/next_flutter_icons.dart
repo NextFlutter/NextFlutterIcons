@@ -70,7 +70,7 @@ class NextIcon extends StatelessWidget {
   final NextIconVariant? variant;
 
   /// {@macro next_flutter_icons_icons}
-  final NextIcons icon;
+  final WithBasePath icon;
 
   @override
   Widget build(BuildContext context) {
