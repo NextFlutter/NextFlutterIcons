@@ -6,6 +6,9 @@
 
 cool community driven tree-shakable icons
 
+## How it works 🔨
+--
+
 ## Installation 💻
 
 **❗ In order to start using Next Flutter Icons you must have the [Flutter SDK][flutter_install_link] installed on your machine.**
