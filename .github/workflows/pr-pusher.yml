@@ -42,16 +42,16 @@ jobs:
 
             for FILE in "${EXPECTED_NAMES[@]}"; do
               BASENAME=$(basename "$FILE".svg)
-              FOUND=false
+              FOUND=0
               for SVG in $SVGS; do
                 if [[ $SVG == *"$BASENAME"* ]]; then
                   mv "$ASSETS_DIR/$FOLDER_NAME/$SVG" "$ASSETS_DIR/$FOLDER_NAME/$BASENAME"
-                  FOUND=true
+                  FOUND=1
                   break
                 fi
             done
             
-            if! $FOUND; then
+            if[ -z $FOUND ]; then
               echo "File $FILE not found or did not match expected pattern."
               exit 1
             fi
