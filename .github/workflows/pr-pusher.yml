@@ -51,7 +51,7 @@ jobs:
                 fi
             done
             
-            if[ -z $FOUND ]; then
+            if [[ $FOUND -eq 0 ]]; then
               echo "File $FILE not found or did not match expected pattern."
               exit 1
             fi
