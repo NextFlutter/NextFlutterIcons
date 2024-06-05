@@ -23,7 +23,16 @@ jobs:
           GEN_FILE="lib/src/icons/next_flutter_icons.dart"
           ASSETS=$(ls ${{ github.workspace }}/assets/)
 
-          ENUM_DEFINITION="import 'package:flutter/widgets.dart'; import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';  /// {@template next_flutter_icons}\n/// pretty cool icons\n/// {@endtemplate}\n@staticIconProvider\nenum NextIcons implements WithBasePath {"
+          ENUM_DEFINITION="
+          import 'package:flutter/widgets.dart'; 
+          import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';  
+          
+          /// {@template next_flutter_icons}
+          /// pretty cool icons
+          /// {@endtemplate}
+          @staticIconProvider
+          enum NextIcons implements WithBasePath {
+          "
           
           # Add each directory as an enum case
           for DIR in $ASSETS; do
