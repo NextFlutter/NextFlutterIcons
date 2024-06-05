@@ -1,4 +1,4 @@
-name: Push Asset Enum Change to PRs
+name: Push Asset Change to PRs
 
 on:
   pull_request:
@@ -17,13 +17,9 @@ jobs:
       
       - name: Update enum
         run: echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
-      
-      - name: Setup commit author
-        run: |
-          git config --local user.email "abhi@git.com"
-          git config --local user.name "AbhiShake1"
 
       # Commit all changed files back to the repository
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Generate icons
