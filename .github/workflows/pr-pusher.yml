@@ -41,11 +41,27 @@ jobs:
             fi
 
             for FILE in "${EXPECTED_NAMES[@]}"; do
-              if! ls $ASSETS_DIR | grep -q "^$FILE$"; then
-                echo "Missing file: $FILE"
-                exit 1
-              fi
+              BASENAME=$(basename "$FILE".svg)
+              FOUND=false
+              for SVG in $SVGS; do
+                if [[ $SVG == *"$BASENAME"* ]]; then
+                  mv "$ASSETS_DIR/$FOLDER_NAME/$SVG" "$ASSETS_DIR/$FOLDER_NAME/$BASENAME"
+                  FOUND=true
+                  break
+                fi
             done
+            if! $FOUND; then
+              echo "File $FILE not found or did not match expected pattern."
+              exit 1
+            fi
+            done
+
+            # for FILE in "${EXPECTED_NAMES[@]}"; do
+            #   if! ls $ASSETS_DIR | grep -q "^$FILE$"; then
+            #     echo "Missing file: $FILE"
+            #     exit 1
+            #   fi
+            # done
             
             rm "$ZIP_FILE"
           done
