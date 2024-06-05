@@ -19,4 +19,4 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git commit -am "Add file change via action"
-          git push
+          git push origin HEAD:${{ github.head_ref }}
