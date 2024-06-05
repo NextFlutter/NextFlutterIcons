@@ -35,8 +35,9 @@ jobs:
 
             echo $(ls "$ASSETS_DIR/$FOLDER_NAME")
 
+            SVGS_LEN=$(find assets -maxdepth 1 -type f -name "*.svg" | wc -l)
+
             readarray -d '.svg' -t SVGS < <(find assets -name "*.svg" -print0)
-            SVGS_LEN=${#SVGS[@]}
 
             echo $SVGS_LEN
             echo $SVGS
