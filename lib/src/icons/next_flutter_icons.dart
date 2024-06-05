@@ -1,4 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';
 
-/// {@template next_flutter_icons}\n/// pretty cool icons\n/// {@endtemplate}\n@staticIconProvider\nenum NextIcons implements WithBasePath {  trash('trash'),;const NextIcons(super.basePath);}
+/// {@template next_flutter_icons}
+/// pretty cool icons
+/// {@endtemplate}
+@staticIconProvider
+enum NextIcons implements WithBasePath {
+  trash('trash'),
+  ;
+
+  const NextIcons(super.basePath);
+}
