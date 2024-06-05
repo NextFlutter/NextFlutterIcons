@@ -18,7 +18,25 @@ jobs:
       - name: Update enum
         run: |
           echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
-          echo $(ls ${{ github.workspace }}/assets/)
+          ASSETS=$(ls ${{ github.workspace }}/assets/)
+
+          ENUM_DEFINITION="import 'package:flutter/widgets.dart';\nimport 'package:next_flutter_icons/src/core/enum_schema/with_basepath.dart';\n\n/// {@template next_flutter_icons}\n/// pretty cool icons\n/// {@endtemplate}\n@staticIconProvider\nenum NextIcons implements WithBasePath {\n"
+          
+          # Add each directory as an enum case
+          for DIR in $ASSETS; do
+            DIR_NAME=$(basename $DIR)
+            if [[ $DIR_NAME == *"_"* ]]; then
+              continue # Skip directories with underscores (assuming they're not valid enum cases)
+            fi
+            ENUM_CASE="$DIR_NAME('$DIR_NAME')"
+            ENUM_DEFINITION+="  $ENUM_CASE,\n"
+          done
+          
+          # Close the enum definition
+          ENUM_DEFINITION+=";\nconst NextIcons(super.basePath);\n}"
+          
+          # Output the generated enum definition
+          echo "$ENUM_DEFINITION"
 
       # Commit all changed files back to the repository
       - name: Push changes
