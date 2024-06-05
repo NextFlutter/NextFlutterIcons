@@ -32,7 +32,7 @@ jobs:
           
           for ZIP_FILE in $ZIP_FILES; do
             FOLDER_NAME=$(basename -s.zip "$ZIP_FILE")
-            mkdir -p $ASSETS_DIR/a/
+            mkdir -p $ASSETS_DIR/$FOLDER_NAME/
             unzip "$ZIP_FILE" -d $ASSETS_DIR/$FOLDER_NAME
             
             rm "$ZIP_FILE"
