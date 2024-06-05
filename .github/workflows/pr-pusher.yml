@@ -33,6 +33,8 @@ jobs:
             mkdir -p $ASSETS_DIR/$FOLDER_NAME/
             unzip "$ZIP_FILE" -d $ASSETS_DIR/$FOLDER_NAME
 
+            echo $(ls "$ASSETS_DIR/$FOLDER_NAME")
+
             SVGS=$(find $ASSETS_DIR/$FOLDER_NAME/ -type f -name "*.svg")
             SVGS_LEN=${#SVGS[@]}
 
