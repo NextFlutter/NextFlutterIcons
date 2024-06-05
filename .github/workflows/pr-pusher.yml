@@ -16,7 +16,9 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Update enum
-        run: echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
+        run: |
+          echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
+          echo $(ls ${{ github.workspace }}/assets/)
 
       # Commit all changed files back to the repository
       - name: Push changes
