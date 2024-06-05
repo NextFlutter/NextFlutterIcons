@@ -7,9 +7,13 @@ on:
 jobs:
   push-file-change:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Update enum
         run: echo "/*This is a modified line*/" >> lib/src/icons/next_flutter_icons.dart
@@ -19,3 +23,8 @@ jobs:
           git config --local user.email "abhi@git.com"
           git config --local user.name "AbhiShake1"
           git commit -am "Add file change via action"
+
+      # Commit all changed files back to the repository
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Generate icons
