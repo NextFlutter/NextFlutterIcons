@@ -49,6 +49,7 @@ jobs:
                   FOUND=1
                   break
                 fi
+              done
             done
             
             if [[ $FOUND -eq 0 ]]; then
